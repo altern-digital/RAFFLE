@@ -267,7 +267,7 @@ MonoBehaviour:
   initialScale: 0
   normalScale: 1
   pressedScale: 0.9
-  scaleDuration: 0.05
+  scaleDuration: 0.15
   sineAmplitude: 0.05
   delay: 3
 --- !u!1 &89954480
@@ -964,7 +964,7 @@ MonoBehaviour:
   initialScale: 0
   normalScale: 1
   pressedScale: 0.9
-  scaleDuration: 0.05
+  scaleDuration: 0.15
   sineAmplitude: 0.05
   delay: 3
 --- !u!1 &1022997280
@@ -1115,7 +1115,7 @@ MonoBehaviour:
   initialScale: 0
   normalScale: 1
   pressedScale: 0.9
-  scaleDuration: 0.05
+  scaleDuration: 0.15
   sineAmplitude: 0.05
   delay: 2
 --- !u!1 &1156775979
@@ -2035,7 +2035,7 @@ MonoBehaviour:
   initialScale: 0
   normalScale: 1
   pressedScale: 0.9
-  scaleDuration: 0.1
+  scaleDuration: 0.15
   sineAmplitude: 0.1
   delay: 0
 --- !u!1 &1823102102
@@ -2413,7 +2413,7 @@ MonoBehaviour:
   initialScale: 0
   normalScale: 1
   pressedScale: 0.9
-  scaleDuration: 0.05
+  scaleDuration: 0.15
   sineAmplitude: 0.05
   delay: 3
 --- !u!1 &2130396368

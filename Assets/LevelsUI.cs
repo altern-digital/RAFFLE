@@ -1,11 +1,13 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelsUI : MonoBehaviour
 {
     public GameObject prefab;
     public int levelCounts;
     public Transform content;
+    public M5LevelManager levelManager;
 
     void Start()
     {
@@ -16,6 +18,7 @@ public class LevelsUI : MonoBehaviour
             go.name = "Level " + (i + 1);
             go.SetActive(true);
             go.GetComponentInChildren<TMP_Text>().text = (i + 1).ToString();
+            go.GetComponentInChildren<Button>().onClick.AddListener(() => levelManager.PlayMinigame(i));
         }
     }
 }
