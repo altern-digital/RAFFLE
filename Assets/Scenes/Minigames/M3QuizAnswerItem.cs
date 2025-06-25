@@ -4,13 +4,13 @@ using UnityEngine.EventSystems;
 
 public class M3QuizAnswerItem : MonoBehaviour, IPointerClickHandler
 {
-    public M3QuizAnswer answerData;
+    public M3QuizChoice answerData;
     public TMP_Text answerText;
 
-    public void SetAnswer(M3QuizAnswer answer)
+    public void SetAnswer(M3QuizChoice answer)
     {
         answerData = answer;
-        answerText.text = answer.answerText;
+        answerText.text = answer.value.ToString();
     }
 
     public void Select()
