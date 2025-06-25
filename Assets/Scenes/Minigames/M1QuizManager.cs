@@ -87,8 +87,18 @@ public class M1QuizGenerator
 {
     static string[] wordBank = new string[]
     {
-        "MATAHARI", "GUNUNG", "SEKOLAH", "PINTU", "LAPANGAN",
-        "BAHASA", "HUTAN", "PULAU", "BINTANG", "BOLA"
+        "NASI", "ROTI", "SUSU", "PISANG", "APEL",
+        "JERUK", "AIR", "GULA", "GARAM", "MAKAN",
+        "KUCING", "ANJING", "AYAM", "BEBEK", "IKAN",
+        "BURUNG", "KUPU", "SEMUT", "SAPI", "KAMBING",
+        "BUKU", "PENSIL", "MEJA", "KURSI", "BOLA",
+        "PINTU", "JENDELA", "SEPATU", "BAJU", "TOPI",
+        "MATA", "HIDUNG", "TELINGA", "MULUT", "TANGAN",
+        "KAKI", "RAMBUT", "PERUT", "GIGI", "LEHER",
+        "MATAHARI", "BULAN", "BINTANG", "AWAN", "HUJAN",
+        "BUNGA", "POHON", "RUMPUT", "TANAH", "LAUT",
+        "DUDUK", "BERDIRI", "TIDUR", "MAIN", "LARI",
+        "TULIS", "BACA", "LIHAT", "DENGAR", "SENYUM"
     };
 
     public static List<M1QuizData> GenerateQuiz(int count)

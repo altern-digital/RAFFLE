@@ -8,7 +8,7 @@ public class M3QuizManager : MonoBehaviour
 
     public List<M3QuizData> quizzes;
     public List<M3QuizAnswerItem> answerItems;
-    public TMP_Text questionTextUI; // Drag in Unity Inspector
+    public QuestionRenderer questionRenderer;
     public int currentQuizIndex = 0;
     public AudioClip correctAnswerSound;
     public AudioClip incorrectAnswerSound;
@@ -24,13 +24,13 @@ public class M3QuizManager : MonoBehaviour
         DisplayCurrentQuiz();
     }
 
-    public void SelectAnswer(M3QuizAnswer answer)
+    public void SelectAnswer(M3QuizChoice answer)
     {
         if (quizzes.Count > currentQuizIndex)
         {
             M3QuizData currentQuiz = quizzes[currentQuizIndex];
 
-            if (currentQuiz.correctAnswerIndex == System.Array.IndexOf(currentQuiz.answers, answer))
+            if (currentQuiz.correctAnswerIndex == System.Array.IndexOf(currentQuiz.choices, answer))
             {
                 AudioSource.PlayClipAtPoint(correctAnswerSound, Vector3.zero);
                 NextQuestion();
@@ -47,11 +47,13 @@ public class M3QuizManager : MonoBehaviour
         if (currentQuizIndex < quizzes.Count)
         {
             M3QuizData currentQuiz = quizzes[currentQuizIndex];
-            questionTextUI.text = currentQuiz.questionText;
+
+            questionRenderer.leftObjectCount = currentQuiz.leftObjectCount;
+            questionRenderer.rightObjectCount = currentQuiz.rightObjectCount;
 
             for (int i = 0; i < answerItems.Count; i++)
             {
-                answerItems[i].SetAnswer(currentQuiz.answers[i]);
+                answerItems[i].SetAnswer(currentQuiz.choices[i]);
             }
         }
     }
@@ -76,14 +78,16 @@ public class M3QuizManager : MonoBehaviour
 public class M3QuizData
 {
     public string questionText;
-    public M3QuizAnswer[] answers;
+    public int leftObjectCount;
+    public int rightObjectCount;
+    public M3QuizChoice[] choices;
     public int correctAnswerIndex;
 }
 
 [System.Serializable]
-public class M3QuizAnswer
+public class M3QuizChoice
 {
-    public string answerText;
+    public int value;
     public bool isCorrect;
 }
 
@@ -96,17 +100,17 @@ public class M3QuizGenerator
 
         for (int i = 0; i < questionCount; i++)
         {
-            int a = rng.Next(1, 20);
-            int b = rng.Next(1, 20);
+            int a = rng.Next(1, 5);
+            int b = rng.Next(1, 5);
             int correctAnswerValue = a + b;
             string questionText = $"{a} + {b} = ?";
 
-            List<M3QuizAnswer> answers = new List<M3QuizAnswer>();
+            List<M3QuizChoice> answers = new List<M3QuizChoice>();
             HashSet<int> usedValues = new HashSet<int> { correctAnswerValue };
 
-            M3QuizAnswer correctAnswer = new M3QuizAnswer
+            M3QuizChoice correctAnswer = new M3QuizChoice
             {
-                answerText = correctAnswerValue.ToString(),
+                value = correctAnswerValue,
                 isCorrect = true
             };
             answers.Add(correctAnswer);
@@ -116,9 +120,9 @@ public class M3QuizGenerator
                 int wrongAnswer = rng.Next(correctAnswerValue - 5, correctAnswerValue + 6);
                 if (wrongAnswer != correctAnswerValue && usedValues.Add(wrongAnswer))
                 {
-                    answers.Add(new M3QuizAnswer
+                    answers.Add(new M3QuizChoice
                     {
-                        answerText = wrongAnswer.ToString(),
+                        value = wrongAnswer,
                         isCorrect = false
                     });
                 }
@@ -129,7 +133,9 @@ public class M3QuizGenerator
             M3QuizData quiz = new M3QuizData
             {
                 questionText = questionText,
-                answers = answers.ToArray(),
+                leftObjectCount = a,
+                rightObjectCount = b,
+                choices = answers.ToArray(),
                 correctAnswerIndex = System.Array.IndexOf(answers.ToArray(), correctAnswer)
             };
 
