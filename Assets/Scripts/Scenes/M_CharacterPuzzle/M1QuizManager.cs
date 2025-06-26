@@ -14,6 +14,13 @@ public class M1QuizManager : MonoBehaviour
     public List<M1QuizAnswerItem> answerButtons; // Each button represents one character
     private int currentIndex = 0;
 
+    // Integrated UI elements and scoring variables
+    public GameObject completeDialog;
+    public TMP_Text currentLevelText;
+    public string scoreKey = "M1Score"; // Changed scoreKey for M1
+    public TMP_Text scoreText;
+    private int score;
+
     void Awake()
     {
         Instance = this;
@@ -22,6 +29,11 @@ public class M1QuizManager : MonoBehaviour
     void Start()
     {
         quizzes = M1QuizGenerator.GenerateQuiz(20);
+
+        // Load previous score or initialize to 0
+        score = PlayerPrefs.GetInt(scoreKey, 0);
+        UpdateScoreText(); // Display initial score
+
         DisplayCurrentQuiz();
     }
 
@@ -29,14 +41,20 @@ public class M1QuizManager : MonoBehaviour
     {
         M1QuizData current = GetCurrentQuiz();
 
-        if (char.ToUpper(chosenChar) == char.ToUpper(current.missingChar))
+        if (current != null) // Ensure there's a current quiz to prevent errors if quiz completes
         {
-            AudioSource.PlayClipAtPoint(correctSound, Vector3.zero);
-            NextQuestion();
-        }
-        else
-        {
-            AudioSource.PlayClipAtPoint(incorrectSound, Vector3.zero);
+            if (char.ToUpper(chosenChar) == char.ToUpper(current.missingChar))
+            {
+                AudioSource.PlayClipAtPoint(correctSound, Vector3.zero);
+                score += 1000; // Add 1000 points for correct answer
+                NextQuestion();
+            }
+            else
+            {
+                AudioSource.PlayClipAtPoint(incorrectSound, Vector3.zero);
+                score -= 500; // Subtract 500 points for incorrect answer
+            }
+            UpdateScoreText(); // Update the score display after each answer
         }
     }
 
@@ -45,6 +63,9 @@ public class M1QuizManager : MonoBehaviour
         if (currentIndex < quizzes.Count)
         {
             M1QuizData current = quizzes[currentIndex];
+
+            // Update the current level display (e.g., "Level 1/20")
+            currentLevelText.text = $"Level {currentIndex + 1}/{quizzes.Count}";
             wordWithBlankText.text = current.displayWord;
 
             // Assign random 4-character options (1 correct + 3 distractors)
@@ -64,8 +85,13 @@ public class M1QuizManager : MonoBehaviour
         }
         else
         {
+            // All quizzes are complete
             wordWithBlankText.text = "Quiz Complete!";
             foreach (var btn in answerButtons) btn.gameObject.SetActive(false);
+            Debug.Log("No more quizzes available. Game Over!");
+            completeDialog.SetActive(true); // Show the complete dialog
+            PlayerPrefs.SetInt(scoreKey, score); // Save the final score
+            PlayerPrefs.Save(); // Ensure PlayerPrefs are saved to disk
         }
     }
 
@@ -80,6 +106,14 @@ public class M1QuizManager : MonoBehaviour
         if (currentIndex < quizzes.Count)
             return quizzes[currentIndex];
         return null;
+    }
+
+    /// <summary>
+    /// Updates the score text display.
+    /// </summary>
+    void UpdateScoreText()
+    {
+        scoreText.text = $"Score: {score}";
     }
 }
 

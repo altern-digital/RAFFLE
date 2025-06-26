@@ -13,6 +13,12 @@ public class M4QuizManager : MonoBehaviour
     public AudioClip correctAnswerSound;
     public AudioClip incorrectAnswerSound;
 
+    public GameObject completeDialog;
+    public TMP_Text currentLevelText;
+    public string scoreKey = "M4Score";
+    public TMP_Text scoreText;
+    private int score;
+
     void Awake()
     {
         Instance = this;
@@ -22,9 +28,12 @@ public class M4QuizManager : MonoBehaviour
     {
         quizzes = M4QuizGenerator.GenerateQuiz(animalDatabase, 20);
 
+        score = PlayerPrefs.GetInt(scoreKey, 0);
+        UpdateScoreText();
+
         DisplayCurrentQuiz();
 
-        Invoke(nameof(PlayCurrentSound), 1f); // Delay to allow UI update
+        Invoke(nameof(PlayCurrentSound), 1f);
     }
 
     public void SelectAnswer(M4QuizAnswer answer)
@@ -36,12 +45,15 @@ public class M4QuizManager : MonoBehaviour
             if (currentQuiz.correctAnswerIndex == System.Array.IndexOf(currentQuiz.answers, answer))
             {
                 AudioSource.PlayClipAtPoint(correctAnswerSound, Vector3.zero);
+                score += 1000;
                 NextQuestion();
             }
             else
             {
                 AudioSource.PlayClipAtPoint(incorrectAnswerSound, Vector3.zero);
+                score -= 500;
             }
+            UpdateScoreText();
         }
     }
 
@@ -51,6 +63,8 @@ public class M4QuizManager : MonoBehaviour
         {
             M4QuizData currentQuiz = quizzes[currentQuizIndex];
 
+            currentLevelText.text = $"Level {currentQuizIndex + 1}/{quizzes.Count}";
+
             for (int i = 0; i < answerItems.Count; i++)
             {
                 answerItems[i].SetAnswer(currentQuiz.answers[i]);
@@ -58,7 +72,10 @@ public class M4QuizManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("No more quizzes available.");
+            Debug.Log("No more quizzes available. Game Over!");
+            completeDialog.SetActive(true);
+            PlayerPrefs.SetInt(scoreKey, score);
+            PlayerPrefs.Save();
         }
     }
 
@@ -77,7 +94,10 @@ public class M4QuizManager : MonoBehaviour
         currentQuizIndex++;
         DisplayCurrentQuiz();
 
-        Invoke(nameof(PlayCurrentSound), 1f); // Delay to allow UI update
+        if (currentQuizIndex < quizzes.Count)
+        {
+            Invoke(nameof(PlayCurrentSound), 1f);
+        }
     }
 
     public M4QuizData GetCurrentQuestion()
@@ -88,6 +108,11 @@ public class M4QuizManager : MonoBehaviour
         }
         return null;
     }
+
+    void UpdateScoreText()
+    {
+        scoreText.text = $"Score: {score}";
+    }
 }
 
 public class M4QuizGenerator
@@ -96,23 +121,23 @@ public class M4QuizGenerator
     {
         if (animalDatabase == null || animalDatabase.Length == 0 || questionCount <= 0)
         {
+            Debug.LogError("Animal database is empty or question count is invalid.");
             return null;
         }
 
         List<M4QuizData> quizzes = new List<M4QuizData>();
+        System.Random rng = new System.Random();
 
         for (int i = 0; i < questionCount; i++)
         {
             M4QuizData quizData = new M4QuizData();
 
-            // Select a random animal for the question
-            int questionIndex = Random.Range(0, animalDatabase.Length);
+            int questionIndex = rng.Next(0, animalDatabase.Length);
             quizData.question = animalDatabase[questionIndex];
 
-            // Prepare answers
             List<M4QuizAnswer> answers = new List<M4QuizAnswer>();
             HashSet<int> usedIndices = new HashSet<int>();
-            // Add the correct answer
+
             M4QuizAnswer correctAnswer = new M4QuizAnswer
             {
                 animalData = quizData.question,
@@ -121,10 +146,9 @@ public class M4QuizGenerator
             answers.Add(correctAnswer);
             usedIndices.Add(questionIndex);
 
-            // Add distractor answers
             while (answers.Count < 4)
             {
-                int distractorIndex = Random.Range(0, animalDatabase.Length);
+                int distractorIndex = rng.Next(0, animalDatabase.Length);
                 if (!usedIndices.Contains(distractorIndex))
                 {
                     M4QuizAnswer distractor = new M4QuizAnswer
@@ -137,9 +161,9 @@ public class M4QuizGenerator
                 }
             }
 
-            // Shuffle answers
             ShuffleLib.ShuffleArray(answers);
             quizData.answers = answers.ToArray();
+
             quizData.correctAnswerIndex = System.Array.IndexOf(quizData.answers, correctAnswer);
 
             quizzes.Add(quizData);
@@ -148,6 +172,7 @@ public class M4QuizGenerator
         return quizzes;
     }
 }
+
 
 [System.Serializable]
 public class M4AnimalData

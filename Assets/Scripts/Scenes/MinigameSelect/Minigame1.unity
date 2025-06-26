@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 18760312}
   - component: {fileID: 18760311}
+  - component: {fileID: 18760313}
   m_Layer: 0
   m_Name: Greetings! - Rhythm Heaven Fever
   m_TagString: Untagged
@@ -248,6 +249,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &18760313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 18760310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77c3ceeb1eaa3a64fae903728e80432e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioSource: {fileID: 18760311}
 --- !u!1 &169039815
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,6 +664,10 @@ MonoBehaviour:
   - {fileID: 461664854}
   - {fileID: 1750298615}
   - {fileID: 950243867}
+  completeDialog: {fileID: 0}
+  currentLevelText: {fileID: 0}
+  scoreKey: M1Score
+  scoreText: {fileID: 0}
 --- !u!1 &457507539
 GameObject:
   m_ObjectHideFlags: 0

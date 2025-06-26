@@ -19,6 +19,10 @@ public class QuestionRenderer : MonoBehaviour
         rightObjectCount = rightCount;
         isDecrement = decrement;
 
+        leftObjectList.activationIndex = leftObjectCount;
+        rightObjectList.activationIndex = rightObjectCount;
+        operationText.text = isDecrement ? "-" : "+";
+
         LayoutRebuilder.ForceRebuildLayoutImmediate(questionContainer);
     }
 
