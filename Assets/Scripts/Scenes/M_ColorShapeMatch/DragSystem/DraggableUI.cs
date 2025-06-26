@@ -1,13 +1,20 @@
+using MyBox;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
     private Transform originalParent;
+    [AutoProperty]
+    public Image image;
     private bool isDragging;
     float time = 0f;
+
+    public Color color;
+    public Sprite sprite;
 
     void Awake()
     {
@@ -28,7 +35,7 @@ public class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, targetRotation), Time.deltaTime * 15f);
 
         time += Time.deltaTime;
-        time = Mathf.Repeat(time, 2 * Mathf.PI); // Reset time to avoid overflow
+        time = Mathf.Repeat(time, 2 * Mathf.PI);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -55,5 +62,17 @@ public class DraggableUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
         {
             transform.SetParent(originalParent);
         }
+    }
+
+    public void SetColor(Color c)
+    {
+        color = c;
+        image.color = c;
+    }
+
+    public void SetSprite(Sprite s)
+    {
+        sprite = s;
+        image.sprite = s;
     }
 }
