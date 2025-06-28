@@ -113,6 +113,7 @@ public class M1QuizManager : MonoBehaviour
     /// </summary>
     void UpdateScoreText()
     {
+        score = Mathf.Max(score, 0); // Ensure score doesn't go negative
         scoreText.text = $"Score: {score}";
     }
 }

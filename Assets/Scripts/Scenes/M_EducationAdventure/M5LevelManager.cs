@@ -10,5 +10,7 @@ public class M5LevelManager : MonoBehaviour
     {
         string sceneName = minigames[index % minigames.Count];
         SceneManager.LoadScene(sceneName);
+
+        Debug.Log($"Loading minigame: {sceneName} at index {index}");
     }
 }

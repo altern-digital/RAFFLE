@@ -120,6 +120,7 @@ public class M3QuizManager : MonoBehaviour
     /// </summary>
     void UpdateScoreText()
     {
+        score = Mathf.Max(score, 0); // Ensure score doesn't go negative
         scoreText.text = $"Score: {score}";
     }
 }
@@ -167,7 +168,12 @@ public class M3QuizGenerator
 
             while (answers.Count < 4)
             {
-                int wrongAnswer = rng.Next(correctAnswerValue - 5, correctAnswerValue + 6);
+                // Ensure the wrong answer is between 1 and correctAnswerValue+5
+                // This prevents negative numbers while keeping a reasonable range
+                int minValue = 1;
+                int maxValue = correctAnswerValue + 6;
+                int wrongAnswer = rng.Next(minValue, maxValue);
+
                 if (wrongAnswer != correctAnswerValue && usedValues.Add(wrongAnswer))
                 {
                     answers.Add(new M3QuizChoice
