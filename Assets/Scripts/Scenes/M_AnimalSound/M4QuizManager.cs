@@ -16,7 +16,6 @@ public class M4QuizManager : MonoBehaviour
 
     public GameObject completeDialog;
     public TMP_Text currentLevelText;
-    public string scoreKey = "M4Score";
     public TMP_Text scoreText;
     private int score;
 
@@ -36,7 +35,6 @@ public class M4QuizManager : MonoBehaviour
     {
         quizzes = M4QuizGenerator.GenerateQuiz(animalDatabase);
 
-        score = PlayerPrefs.GetInt(scoreKey, 0);
         UpdateScoreText();
 
         DisplayCurrentQuiz();
@@ -89,8 +87,6 @@ public class M4QuizManager : MonoBehaviour
         {
             Debug.Log("No more quizzes available. Game Over!");
             completeDialog.SetActive(true);
-            PlayerPrefs.SetInt(scoreKey, score);
-            PlayerPrefs.Save();
         }
     }
 

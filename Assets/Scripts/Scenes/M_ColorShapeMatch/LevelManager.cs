@@ -21,7 +21,6 @@ public class LevelManager : MonoBehaviour
     public TMP_Text scoreText;
     private int score = 0;
     public GameObject completeDialog;
-    public string scoreKey = "ColorShapeScore";
     public AudioClip correctSound;
     public AudioClip incorrectSound;
 
@@ -38,7 +37,6 @@ public class LevelManager : MonoBehaviour
             return;
         }
 
-        score = PlayerPrefs.GetInt(scoreKey, 0);
         UpdateScoreText();
 
         StartLevel();
@@ -185,8 +183,6 @@ public class LevelManager : MonoBehaviour
     {
         Debug.Log("Game Complete!");
         completeDialog.SetActive(true);
-        PlayerPrefs.SetInt(scoreKey, score);
-        PlayerPrefs.Save();
     }
 
     void UpdateScoreText()

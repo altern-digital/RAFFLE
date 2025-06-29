@@ -17,7 +17,6 @@ public class M1QuizManager : MonoBehaviour
     // Integrated UI elements and scoring variables
     public GameObject completeDialog;
     public TMP_Text currentLevelText;
-    public string scoreKey = "M1Score"; // Changed scoreKey for M1
     public TMP_Text scoreText;
     private int score;
 
@@ -31,7 +30,6 @@ public class M1QuizManager : MonoBehaviour
         quizzes = M1QuizGenerator.GenerateQuiz(20);
 
         // Load previous score or initialize to 0
-        score = PlayerPrefs.GetInt(scoreKey, 0);
         UpdateScoreText(); // Display initial score
 
         DisplayCurrentQuiz();
@@ -90,8 +88,6 @@ public class M1QuizManager : MonoBehaviour
             foreach (var btn in answerButtons) btn.gameObject.SetActive(false);
             Debug.Log("No more quizzes available. Game Over!");
             completeDialog.SetActive(true); // Show the complete dialog
-            PlayerPrefs.SetInt(scoreKey, score); // Save the final score
-            PlayerPrefs.Save(); // Ensure PlayerPrefs are saved to disk
         }
     }
 

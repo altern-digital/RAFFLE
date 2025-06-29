@@ -16,7 +16,6 @@ public class M3QuizManager : MonoBehaviour
     // Integrated UI elements and scoring variables
     public GameObject completeDialog;
     public TMP_Text currentLevelText;
-    public string scoreKey = "M3Score"; // Changed scoreKey for M3
     public TMP_Text scoreText;
     private int score;
 
@@ -30,7 +29,6 @@ public class M3QuizManager : MonoBehaviour
         quizzes = M3QuizGenerator.GenerateQuiz(20); // Generate 20 quiz questions
 
         // Load previous score or initialize to 0
-        score = PlayerPrefs.GetInt(scoreKey, 0);
         UpdateScoreText(); // Display initial score
 
         DisplayCurrentQuiz(); // Display the first quiz question
@@ -95,8 +93,6 @@ public class M3QuizManager : MonoBehaviour
             // All quizzes are complete
             Debug.Log("No more quizzes available. Game Over!");
             completeDialog.SetActive(true); // Show the complete dialog
-            PlayerPrefs.SetInt(scoreKey, score); // Save the final score
-            PlayerPrefs.Save(); // Ensure PlayerPrefs are saved to disk
         }
     }
 
