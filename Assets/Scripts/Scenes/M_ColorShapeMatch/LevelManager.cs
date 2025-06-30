@@ -65,7 +65,6 @@ public class LevelManager : MonoBehaviour
 
     void GenerateLevel(int level)
     {
-        // Get all possible unique shape-color combinations from your defined lists.
         List<(Sprite shape, Color color)> allUniqueCombinations = new List<(Sprite, Color)>();
         foreach (Sprite s in shapes)
         {
@@ -75,16 +74,10 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        // Determine the number of objects to spawn for this level.
-        // This is exactly the 'level' number.
         int numberOfObjectsToSpawn = level;
 
-        // Ensure we don't try to spawn more objects than we have available drop targets.
-        // If level > dropTargets.Count, we can only use as many targets as available.
         int numberOfActiveDropTargets = Mathf.Min(numberOfObjectsToSpawn, dropTargets.Count);
 
-        // Ensure we have enough unique combinations to pick for our active targets.
-        // If numberOfActiveDropTargets > allUniqueCombinations.Count, we cap it.
         numberOfActiveDropTargets = Mathf.Min(numberOfActiveDropTargets, allUniqueCombinations.Count);
 
 
@@ -95,26 +88,21 @@ public class LevelManager : MonoBehaviour
             return;
         }
 
-        // 1. Select the unique combinations that will be represented by the drop targets
         List<(Sprite shape, Color color)> selectedTargetCombinations = GetRandomUniqueItems(allUniqueCombinations, numberOfActiveDropTargets);
 
-        // 2. Assign these combinations to a subset of your actual DropTargetUI elements
         List<DropTargetUI> selectedDropTargets = GetRandomUniqueItems(dropTargets, numberOfActiveDropTargets);
-        currentLevelActiveDropTargets.AddRange(selectedDropTargets); // Track active targets for this level
+        currentLevelActiveDropTargets.AddRange(selectedDropTargets);
 
         for (int i = 0; i < selectedTargetCombinations.Count; i++)
         {
             selectedDropTargets[i].SetTarget(selectedTargetCombinations[i].shape, selectedTargetCombinations[i].color);
         }
 
-        // 3. Spawn 'level' number of draggable objects, allowing duplicates.
-        // Each spawned object will randomly pick one of the 'selectedTargetCombinations'.
         for (int i = 0; i < numberOfObjectsToSpawn; i++)
         {
             GameObject shapeObject = Instantiate(shapePrefab, content);
             DraggableUI shapeComponent = shapeObject.GetComponent<DraggableUI>();
 
-            // Randomly pick one of the active target combinations for this draggable item
             (Sprite shape, Color color) chosenCombination = selectedTargetCombinations[Random.Range(0, selectedTargetCombinations.Count)];
 
             shapeComponent.SetSprite(chosenCombination.shape);
@@ -131,21 +119,7 @@ public class LevelManager : MonoBehaviour
             shapeObject.SetActive(true);
         }
 
-        ShuffleShapesPosition();
-    }
-
-    void ShuffleShapesPosition()
-    {
-        System.Random rng = new System.Random();
-        int n = activeShapes.Count;
-        while (n > 1)
-        {
-            n--;
-            int k = rng.Next(n + 1);
-            Vector2 tempPosition = activeShapes[k].GetComponent<RectTransform>().anchoredPosition;
-            activeShapes[k].GetComponent<RectTransform>().anchoredPosition = activeShapes[n].GetComponent<RectTransform>().anchoredPosition;
-            activeShapes[n].GetComponent<RectTransform>().anchoredPosition = tempPosition;
-        }
+        ShuffleLib.ShuffleList(activeShapes);
     }
 
     public void OnShapeDropped(DraggableUI droppedShape, DropTargetUI dropTarget)
@@ -158,12 +132,9 @@ public class LevelManager : MonoBehaviour
             score += 500;
 
             activeShapes.Remove(droppedShape);
-            // We do NOT add to filledDropTargets here because a target can receive multiple correct drops.
-            // A target is only "filled" in terms of its type being available.
 
             droppedShapesCount++;
 
-            // Check if ALL 'level' objects have been correctly dropped.
             if (droppedShapesCount >= currentLevel)
             {
                 Debug.Log("Level Complete!");

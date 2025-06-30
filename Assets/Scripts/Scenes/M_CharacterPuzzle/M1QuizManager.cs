@@ -168,11 +168,7 @@ public class M1QuizGenerator
         }
 
         // Shuffle
-        for (int i = options.Count - 1; i > 0; i--)
-        {
-            int j = rng.Next(i + 1);
-            (options[i], options[j]) = (options[j], options[i]);
-        }
+        ShuffleLib.ShuffleList(options);
 
         return options;
     }

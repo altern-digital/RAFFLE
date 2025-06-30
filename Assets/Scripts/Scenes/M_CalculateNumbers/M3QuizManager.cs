@@ -164,8 +164,6 @@ public class M3QuizGenerator
 
             while (answers.Count < 4)
             {
-                // Ensure the wrong answer is between 1 and correctAnswerValue+5
-                // This prevents negative numbers while keeping a reasonable range
                 int minValue = 1;
                 int maxValue = correctAnswerValue + 6;
                 int wrongAnswer = rng.Next(minValue, maxValue);
@@ -180,7 +178,7 @@ public class M3QuizGenerator
                 }
             }
 
-            ShuffleLibM3.ShuffleArray(answers, rng); // Use a specific ShuffleLib for M3 if one exists, otherwise use a generic one.
+            ShuffleLib.ShuffleArray(answers);
 
             M3QuizData quiz = new M3QuizData
             {
@@ -195,22 +193,5 @@ public class M3QuizGenerator
         }
 
         return quizzes;
-    }
-}
-
-// Assuming a ShuffleLibM3 exists or defining a generic one here for completion
-public static class ShuffleLibM3
-{
-    public static void ShuffleArray<T>(List<T> list, System.Random rng)
-    {
-        int n = list.Count;
-        while (n > 1)
-        {
-            n--;
-            int k = rng.Next(n + 1);
-            T value = list[k];
-            list[k] = list[n];
-            list[n] = value;
-        }
     }
 }
